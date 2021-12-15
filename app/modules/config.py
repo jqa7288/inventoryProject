@@ -1,5 +1,4 @@
 #config.py
-#j quick 12/13/21
 
 #contains configuration variables for inventoryApp
 

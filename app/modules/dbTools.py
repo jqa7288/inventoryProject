@@ -1,13 +1,11 @@
 #dbTools
-#j quick 12/13/21 v0.1
-
 #Database and data handling logic module for inventoryApp
 
 import pymongo
-import modules.config
+import modules.config as config
 
-client = pymongo.MongoClient("mongodb://localhost:27017/")
-db = client["inv1"]
+client = pymongo.MongoClient(config.dbString)
+db = client[config.dbName]
 stacks = db['stacks']
 locations = db['locations']
 items = db['items']
@@ -39,6 +37,7 @@ class stack:
         print("Pushing record....")
         x = coll.insert_one(rec)
         print("Push Complete....")
+
 class item:
     def __init__(self, partNum, description, expiration, unit):
         self.partNum = partNum #string
@@ -59,3 +58,26 @@ class item:
         print("Push Complete....")
         
 
+def getStockList(query):
+    if query == None:
+        res = list(stacks.find())
+    else:
+        res = list(stacks.find({"$or":[{"partNumber": query}, {"batch": query}, {"location": query}]}))
+    
+    return res
+
+def getItemList(query):
+    if query == None:
+        res = list(items.find())
+    else:
+        res = list(items.find({"$or":[{"partNumber": query}, {"description": query}]}))
+    
+    return res
+
+def getLocationList(query):
+    if query == None:
+        res = list(locations.find())
+    else:
+        res = list(locations.find({"locName": query}))
+    
+    return res
