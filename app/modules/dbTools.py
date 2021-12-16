@@ -34,7 +34,7 @@ class stack:
             'expiration': self.expiration,
             'location' : self.location
         }
-        print("Pushing record....")
+        print("Pushing stack record....")
         x = coll.insert_one(rec)
         print("Push Complete....")
 
@@ -53,10 +53,26 @@ class item:
             'expiration' : self.expiration,
             'unit' : self.unit
         }
-        print("Pushing record....")
+        print("Pushing item record....")
         x = coll.insert_one(rec)
         print("Push Complete....")
-        
+
+class location:
+    def __init__(self, locationName, storageType, warehouse):
+        self.locationName = locationName
+        self.storageType = storageType
+        self.warehouse = warehouse
+
+    def pushLocationRecord(self, coll):
+        print("Creating location record....")
+        rec = {
+            'locationName':self.locationName,
+            'storageType':self.storageType,
+            'warehouse':self.warehouse
+        }
+        print("Pushing location record....")
+        x = coll.insert_one(rec)
+        print("Push Complete....")
 
 def getStockList(query):
     if query == None:
@@ -81,3 +97,17 @@ def getLocationList(query):
         res = list(locations.find({"locName": query}))
     
     return res
+
+def itemExists(query):
+    res = list(items.find({'partNumber': query}))
+    if len(res) > 0:
+        return True
+    else:
+        return False
+
+def locationExists(query):
+    res = list(locations.find({'locationName': query}))
+    if len(res) > 0:
+        return True
+    else:
+        return False

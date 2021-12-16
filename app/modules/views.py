@@ -114,6 +114,9 @@ class createItemWindow(QWidget):
         self.createButton = QPushButton("Create Item")
         self.createButton.clicked.connect(self.createItem)
         
+        self.clearButton = QPushButton("Clear")
+        self.clearButton.clicked.connect(self.clearItemForm)
+
         grid_layout.addWidget(QLabel("Part Number: "), 0, 0, 1, 2)
         grid_layout.addWidget(self.partNum, 0, 2, 1, 4)
         
@@ -126,12 +129,22 @@ class createItemWindow(QWidget):
         grid_layout.addWidget(QLabel("Unit of Measure: "), 3, 0, 1, 2)
         grid_layout.addWidget(self.unit, 3, 2, 1, 4)
        
-        grid_layout.addWidget(self.createButton, 4, 2, 1, 3)
-        
+        grid_layout.addWidget(self.createButton, 4, 3, 1, 2)
+        grid_layout.addWidget(self.clearButton, 4, 0, 1, 2)
         
     def createItem(self):
-        item = db.item(self.partNum.text(), self.description.text(), self.expiration.text(), self.unit.currentText())
-        res = item.pushItemRecord(db.items)
+        if db.itemExists(self.partNum.text()):
+            QMessageBox.information(self, "Alert", "Part already exists in database!")
+        else:
+            item = db.item(self.partNum.text(), self.description.text(), self.expiration.text(), self.unit.currentText())
+            res = item.pushItemRecord(db.items)
+            self.clearItemForm()
+            QMessageBox.information(self, "Success!", "Item added to database!")
+        
+    def clearItemForm(self):
+        self.partNum.setText('')
+        self.description.setText('')
+        self.expiration.setText('')
 
 
 class editItemWindow(QWidget):
@@ -231,7 +244,46 @@ class locationListWindow(QWidget):
 #INCOMPLETE
 class createLocationWindow(QWidget):
     def __init__(self):
-        None
+        super().__init__()
+        grid_layout = QGridLayout()
+        self.setLayout(grid_layout)
+
+        self.locationName = QLineEdit()
+        self.storageType = QLineEdit()
+        self.warehouse = QLineEdit()
+
+
+        self.createButton = QPushButton("Create Location")
+        self.createButton.clicked.connect(self.createLocation)
+        
+        self.clearButton = QPushButton("Clear")
+        self.clearButton.clicked.connect(self.clearLocationForm)
+
+        grid_layout.addWidget(QLabel("Location Name: "), 0, 0, 1, 2)
+        grid_layout.addWidget(self.locationName, 0, 2, 1, 4)
+        
+        grid_layout.addWidget(QLabel("Storage Type: "), 1, 0, 1, 2)
+        grid_layout.addWidget(self.storageType, 1, 2, 1, 4)
+
+        grid_layout.addWidget(QLabel("Warehouse: "), 2, 0, 1, 2)
+        grid_layout.addWidget(self.warehouse, 2, 2, 1, 4)
+              
+        grid_layout.addWidget(self.createButton, 4, 3, 1, 2)
+        grid_layout.addWidget(self.clearButton, 4, 0, 1, 2)
+        
+    def createLocation(self):
+        if db.locationExists(self.locationName.text()):
+            QMessageBox.information(self, "Alert", "Location already exists in database!")
+        else:
+            location = db.location(self.locationName.text(), self.storageType.text(), self.warehouse.text())
+            res = location.pushLocationRecord(db.locations)
+            self.clearLocationForm()
+            QMessageBox.information(self, "Success!", "Item added to database!")
+        
+    def clearLocationForm(self):
+        self.locationName.setText('')
+        self.storageType.setText('')
+        self.warehouse.setText('')
 
 #INCOMPLETE
 class editLocationWindow(QWidget):

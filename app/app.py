@@ -41,7 +41,7 @@ class mainWindow(QMainWindow):
         editItemAct.triggered.connect(self.showEditItem)
 
         editLocationAct = QAction("Location", self)
-        editItemAct.triggered.connect(self.showEditLocation)
+        editLocationAct.triggered.connect(self.showEditLocation)
 
         #View Menu Actions
 
@@ -101,10 +101,10 @@ class mainWindow(QMainWindow):
         #self.setCentralWidget(window)
     
     def showCreateLocation(self):
-        print("DEBUG: createLocationWindow under construction...")
-        QMessageBox.information(self, "Error", "This feature is under construction and not yet available.")
-        #window = views.createLocationWindow()
-        #self.setCentralWidget(window)
+        #print("DEBUG: createLocationWindow under construction...")
+        #QMessageBox.information(self, "Error", "This feature is under construction and not yet available.")
+        window = views.createLocationWindow()
+        self.setCentralWidget(window)
 
     def showItemList(self):
         print("DEBUG: itemListWindow under construction...")
